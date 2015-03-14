@@ -1,0 +1,25 @@
+{
+  "author": "AngularUI Team",
+  "name": "angular-ui",
+  "description": "AngularUI - Companion Suite for AngularJS",
+  "homepage": "http://angular-ui.github.com",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/angular-ui/angular-ui.git"
+  },
+  "main": "./build/angular-ui.min.js",
+  "dependencies": {
+    "jquery": ">= 1.8.0",
+    "angular": ">= 1.0.2"
+  },
+  "_release": "992477a84d",
+  "_resolution": {
+    "type": "branch",
+    "branch": "bower",
+    "commit": "992477a84d41c79b744cc2102a1f38808cc3f1d1"
+  },
+  "_source": "git://github.com/angular-ui/angular-ui.git",
+  "_target": "bower",
+  "_originalSource": "angular-ui",
+  "_direct": true
+}
