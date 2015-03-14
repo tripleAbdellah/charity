@@ -10,7 +10,7 @@
         
         $http(
             {
-                url: '/api/donor/post',
+                url: '/api/donor/addDonor',
                 method: "POST",
                 data: JSON.stringify(donorObj),
                 headers: { 'Content-Type': 'application/json' }

@@ -11,20 +11,11 @@ namespace DonorApp.Controllers
     public class DonorController : ApiController
     {
         static readonly IDonorRepository repository = new DonorRepository();
-        [HttpGet]
-        public Donor GetDonorByName(string donorID)
-        {
-            Donor donor = repository.Get(donorID);
-            if (donor == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-            return donor;
-        }
+        
         [HttpGet]
         public Donor GetDonor(int donorID)
         {
-            Donor donor = repository.Get(donorID);
+            Donor donor = repository.GetDonor(donorID);
             if (donor == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -32,13 +23,8 @@ namespace DonorApp.Controllers
             return donor;
         }
 
-        public IEnumerable<Donor> GetCustomersByCountry(string country)
-        {
-            return repository.GetAll().Where(
-                d => string.Equals(d.COUNTRY, country, StringComparison.OrdinalIgnoreCase));
-        }
-
-        public HttpResponseMessage PostDonor(Donor donor)
+		[HttpPost]
+        public HttpResponseMessage AddDonor(Donor donor)
         {
             donor = repository.AddDonor(donor);
             var response = Request.CreateResponse<Donor>(HttpStatusCode.Created, donor);
@@ -48,7 +34,19 @@ namespace DonorApp.Controllers
             return response;
         }
 
-        public void PutDonor(int donorID, Donor donor)
+        [HttpGet]
+        public IEnumerable<Donor> GetDonors([FromUri] Donor donor)
+        {
+            IEnumerable<Donor> donors = repository.GetDonors(donor);
+            if (donors == null || donors.size() == 0)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+            return donors;
+        }
+
+        [HttpPut]
+        public void UpdateDonor(int donorID, Donor donor)
         {
             donor.CODE = donorID;
             if (!repository.Update(donor))
@@ -57,9 +55,10 @@ namespace DonorApp.Controllers
             }
         }
 
+        [HttpDelete]
         public void DeleteDonor(int donorID)
         {
-            Donor donor = repository.Get(donorID);
+            Donor donor = repository.GetDonor(donorID);
 
             if (donor == null)
             {

@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+    <title>TEST</title>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+</head>
+
+<body ng-controller="AllocationController">
+    <style>
+        .table-hover tbody tr:hover > td {
+            cursor: pointer;
+        }
+    </style>
+
+    <div class="container">
+        <h3>Donor: {{donor.CODE}}</h3>
+        <table class="table table-striped table-condensed table-hover">
+            <thead>
+                <tr>
+                    <th>Donor Code</th>
+                    <th>Type </th>
+                    <th>Name</th>
+                    <th>Address 1</th>
+                    <th>Address 2</th>
+                    <th>Postcode</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <tr>
+                    <td>{{donor.CODE}}</td>
+                    <td>{{donor.TYPE}}</td>
+                    <td>{{donor.NAME}}</td>
+                    <td>{{donor.ADD1}}</td>
+                    <td>{{donor.ADD2}}</td>
+                    <td>{{donor.PCODE}}</td>
+                </tr>
+
+            </tbody>
+        </table>
+
+
+       
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Donor Code:</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-model="donorCode" placeholder="Donor code">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Donor Name:</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-model="FullName" placeholder="Name">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Address:</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-model="add1" placeholder="Address1">
+                    <input type="text" ng-model="postcode" placeholder="postcode">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">City:</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-model="city" placeholder="City">
+                </div>
+            </div>
+        </form>
+
+        <pre>URL: {{ getUrl()}}</pre>
+        <pre>JSONResponse: {{ donors }}</pre>
+        <br />
+
+
+    </div>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+    <script src="js/SearchDonor.js"></script>
+    <script src="js/DirectiveLoading.js"></script>
+    <script src="js/dirPagination.js"></script>
+</body>
+</html>

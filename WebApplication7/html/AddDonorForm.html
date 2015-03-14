@@ -99,7 +99,7 @@
         </form>
 
         <hr>
-        <button class="btn btn-success" ng-click="reset()"  ng-disabled="error || incomplete">
+        <button class="btn btn-success" ng-click="reset()"  ng-disabled="error || incomplete || inprocess">
             <span class="glyphicon glyphicon-save"></span> Save Changes
         </button>
         <p>Donor code is: {{dataResults.CODE }}</p>

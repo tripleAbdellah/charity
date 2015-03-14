@@ -8,9 +8,8 @@ namespace DonorApp.Models
 {
     public interface IDonorRepository
     {
-        IEnumerable<Donor> GetAll();
-        Donor Get(int donorID);
-        Donor Get(string name);
+        IEnumerable<Donor> GetDonors(Donor item);
+        Donor GetDonor(int donorID);
         Donor AddDonor(Donor item);
         bool Remove(int donorID);
         bool Update(Donor item);
