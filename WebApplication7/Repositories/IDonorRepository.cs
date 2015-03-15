@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DonorApp.Models
+using DonorApp.Models;
+
+namespace DonorApp.Repositories
 {
     public interface IDonorRepository
     {

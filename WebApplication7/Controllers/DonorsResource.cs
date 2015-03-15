@@ -5,17 +5,18 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using DonorApp.Models;
+using DonorApp.Repositories;
 
 namespace DonorApp.Controllers
 {
 
-	[Route("api/donors")]
+	[RoutePrefix("api/donors")]
     public class DonorsResource : ApiController
     {
-        static readonly IDonorRepository repository = new DonorRepository();
+        static readonly IDonorsRepository repository = new DonorsRepository();
 
         [HttpGet]
-        [Route(Name="GetAllDonors")]
+        [Route("", Name="GetAllDonors")]
         public IEnumerable<Donor> GetAllDonors()
         {
         	try
@@ -27,14 +28,14 @@ namespace DonorApp.Controllers
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
         }
-
+        /*
         [HttpGet]
-        [Route(Name="SearchDonors")]
+        [Route("", Name="SearchDonors")]
         public IEnumerable<Donor> GetDonors([FromUri] SearchDonorRequest searchRequest)
         {
         	try
         	{
-        		if (searchRequest.getCode() > 0) 
+        		if (searchRequest.Code > 0) 
         		{
         			//	redirect
         		}
@@ -59,9 +60,9 @@ namespace DonorApp.Controllers
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
         }
-
+        */
 		[HttpPost]
-		[Route(Name="AddDonor")]
+		[Route("", Name="AddDonor")]
         public HttpResponseMessage AddDonor(Donor donor)
         {
         	try
@@ -98,7 +99,7 @@ namespace DonorApp.Controllers
         }
 
         [HttpDelete]
-        [Route(Name="DeleteDonor")]
+        [Route("{id:int}", Name = "DeleteDonor")]
         public void DeleteDonor(int donorID)
         {
         	try

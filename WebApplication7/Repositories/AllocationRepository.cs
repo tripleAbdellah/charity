@@ -7,7 +7,9 @@ using System.Configuration;
 using System.Data;
 using System.Diagnostics;
 
-namespace DonorApp.Models
+using DonorApp.Models;
+
+namespace DonorApp.Repositories
 {
     public class AllocationRepository : IAllocationRepository
     {

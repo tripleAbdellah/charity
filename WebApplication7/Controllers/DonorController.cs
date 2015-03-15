@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using DonorApp.Models;
+using DonorApp.Repositories;
 
 namespace DonorApp.Controllers
 {
@@ -38,7 +39,7 @@ namespace DonorApp.Controllers
         public IEnumerable<Donor> GetDonors([FromUri] Donor donor)
         {
             IEnumerable<Donor> donors = repository.GetDonors(donor);
-            if (donors == null || donors.size() == 0)
+            if (donors == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
