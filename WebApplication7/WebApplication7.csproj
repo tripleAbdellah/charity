@@ -209,9 +209,9 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AllocationController.cs" />
-    <Compile Include="Controllers\DonorController.cs" />
+    <Compile Include="Controllers\DonorsController.cs" />
+    <Compile Include="Models\InvalidRequestException.cs" />
     <Compile Include="Models\DonorNotFoundException.cs" />
-    <Compile Include="Controllers\DonorsResource.cs" />
     <Compile Include="Models\InvalidDonorException.cs" />
     <Compile Include="Models\NoDonorsFoundException.cs" />
     <Compile Include="Global.asax.cs">
@@ -220,10 +220,8 @@
     <Compile Include="Models\SearchDonorRequest.cs" />
     <Compile Include="Repositories\AllocationRepository.cs" />
     <Compile Include="Repositories\DonorsRepository.cs" />
-    <Compile Include="Repositories\DonorRepository.cs" />
     <Compile Include="Models\Donor.cs" />
     <Compile Include="Repositories\IAllocationRepository.cs" />
-    <Compile Include="Repositories\IDonorRepository.cs" />
     <Compile Include="Models\ShoppigSubCategory.cs" />
     <Compile Include="Models\ShoppingCategory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

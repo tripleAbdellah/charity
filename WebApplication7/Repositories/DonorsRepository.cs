@@ -6,13 +6,29 @@ using System.Web;
 using System.Configuration;
 using System.Data;
 using System.Diagnostics;
-
 using DonorApp.Models;
 
 namespace DonorApp.Repositories
 {
-    public class DonorRepository : IDonorRepository
+    public class DonorsRepository : IDonorsRepository
     {
+        public IEnumerable<Donor> GetAllDonors()
+        {
+            Donor donor = new Donor();
+            donor.CODE = 100;
+            return GetDonors(donor);
+        }
+
+        public IEnumerable<Donor> GetDonors(SearchDonorRequest searchRequest)
+        {
+            Donor donor = new Donor();
+            donor.CODE = searchRequest.Code;
+            donor.PCODE = searchRequest.PostCode;
+            donor.EMAIL = searchRequest.Email;
+            //donor.TEL = searchRequest.PhoneNumber;
+            return GetDonors(donor);
+        }
+
         public IEnumerable<Donor> GetDonors(Donor donor)
         {
             List<Donor> donors = new List<Donor>();
@@ -166,7 +182,7 @@ namespace DonorApp.Repositories
             return aDonor;
         }
 
-        public bool Remove(int donorID)
+        public void DeleteDonor(int donorID)
         {
             var con = ConfigurationManager.ConnectionStrings["October2001"].ToString();
             using (SqlConnection myConnection = new SqlConnection(con))
@@ -180,7 +196,6 @@ namespace DonorApp.Repositories
                     myConnection.Close();
                 }
             }
-            return true;
         }
 
         private int getDonorID() {
@@ -205,7 +220,7 @@ namespace DonorApp.Repositories
             return 0;
         }
 
-        public bool Update(Donor donor)
+        public void UpdateDonor(int donorID, Donor donor)
         {
             /*string query = string.Format("UPDATE [Northwind].[dbo].[Customers] " +
                     " SET [CustomerID] = '{0}'," +
@@ -233,7 +248,6 @@ namespace DonorApp.Repositories
                 }
             }
             */
-            return true;
         }
     }
 }

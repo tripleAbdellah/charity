@@ -10,57 +10,77 @@ using DonorApp.Repositories;
 namespace DonorApp.Controllers
 {
 
-	[RoutePrefix("api/donors")]
-    public class DonorsResource : ApiController
+    [RoutePrefix("api/donors")]
+    public class DonorsController : ApiController
     {
         static readonly IDonorsRepository repository = new DonorsRepository();
-
+        /*
         [HttpGet]
-        [Route("", Name="GetAllDonors")]
         public IEnumerable<Donor> GetAllDonors()
         {
-        	try
-        	{
-            	return repository.GetAllDonors();
+            try
+            {
+                return repository.GetAllDonors();
             }
             catch (NoDonorsFoundException e)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
         }
-        /*
+        */
         [HttpGet]
         [Route("", Name="SearchDonors")]
-        public IEnumerable<Donor> GetDonors([FromUri] SearchDonorRequest searchRequest)
+        public HttpResponseMessage GetDonors([FromUri] SearchDonorRequest searchRequest)
         {
         	try
         	{
-        		if (searchRequest.Code > 0) 
+        		if (searchRequest == null) 
         		{
-        			//	redirect
+                    IEnumerable<Donor> donors = repository.GetAllDonors();
+                    return Request.CreateResponse<IEnumerable<Donor>>(HttpStatusCode.OK, donors);
         		}
-            	return repository.GetDonors(searchRequest);
+                else
+                {
+                    if (searchRequest.Code > 0)
+                    {
+                        var response = Request.CreateResponse(HttpStatusCode.RedirectMethod);
+
+                        string uri = Url.Link("GetDonorById", new { id = searchRequest.Code });
+                        response.Headers.Location = new Uri(uri);
+                        return response;
+                    }
+                    else
+                    {
+                        IEnumerable<Donor> donors = repository.GetDonors(searchRequest.validate());
+                        return Request.CreateResponse<IEnumerable<Donor>>(HttpStatusCode.OK, donors);
+                    }
+                }
+            	
             }
             catch (NoDonorsFoundException e)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+            catch (InvalidRequestException ire)
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
         }
 
         [HttpGet]
         [Route("{id:int}", Name="GetDonorById")]
-        public Donor GetDonor(int donorID)
+        public Donor GetDonor(int id)
         {
         	try
         	{
-            	return repository.GetDonor(donorID);
+            	return repository.GetDonor(id);
             }
             catch (DonorNotFoundException e)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
         }
-        */
+        
 		[HttpPost]
 		[Route("", Name="AddDonor")]
         public HttpResponseMessage AddDonor(Donor donor)
@@ -111,5 +131,6 @@ namespace DonorApp.Controllers
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
         }
+
     }
 }
