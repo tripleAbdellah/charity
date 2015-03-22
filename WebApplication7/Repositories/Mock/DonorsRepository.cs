@@ -34,9 +34,9 @@ namespace DonorApp.Repositories.Mock
         //   throws NoDonorsFoundException
         public IEnumerable<Donor> GetDonors(SearchDonorRequest searchRequest)
         {
-            List<Donor> matches = donors.Values.ToList().FindAll(e => ( searchRequest.Email == null || searchRequest.Email.Equals(e.EMAIL) ) 
-                && ( searchRequest.PostCode == null || searchRequest.PostCode.Equals(e.PCODE) )
-                && ( searchRequest.PhoneNumber == null || searchRequest.PhoneNumber.Equals(e.TEL) ) );
+            List<Donor> matches = donors.Values.ToList().FindAll(e => ( searchRequest.Email == null || searchRequest.Email.Equals(e.Email) ) 
+                && ( searchRequest.PostCode == null || searchRequest.PostCode.Equals(e.PostCode) )
+                && ( searchRequest.PhoneNumber == null || searchRequest.PhoneNumber.Equals(e.TelephoneHome) ) );
             if (matches.Count == 0)
             {
                 throw new NoDonorsFoundException();
@@ -69,9 +69,9 @@ namespace DonorApp.Repositories.Mock
             }
             else 
             {
-                aDonor.CODE = NextId;
-                donors.Add(aDonor.CODE, aDonor);
-                return aDonor.CODE;
+                aDonor.Code = NextId;
+                donors.Add(aDonor.Code, aDonor);
+                return aDonor.Code;
             }
         }
 

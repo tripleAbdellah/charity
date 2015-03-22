@@ -15,16 +15,16 @@ namespace DonorApp.Repositories
         public IEnumerable<Donor> GetAllDonors()
         {
             Donor donor = new Donor();
-            donor.CODE = 100;
+            donor.Code = 100;
             return GetDonors(donor);
         }
 
         public IEnumerable<Donor> GetDonors(SearchDonorRequest searchRequest)
         {
             Donor donor = new Donor();
-            donor.CODE = searchRequest.Code;
-            donor.PCODE = searchRequest.PostCode;
-            donor.EMAIL = searchRequest.Email;
+            donor.Code = searchRequest.Code;
+            donor.PostCode = searchRequest.PostCode;
+            donor.Email = searchRequest.Email;
             //donor.TEL = searchRequest.PhoneNumber;
             return GetDonors(donor);
         }
@@ -40,33 +40,33 @@ namespace DonorApp.Repositories
                 //building the SQL string
                 string SQLWhereString = "";
 
-                if (donor.CODE > 0)
+                if (donor.Code > 0)
                 {
-                    SQLWhereString = " Code = " + donor.CODE ;
+                    SQLWhereString = " Code = " + donor.Code ;
                 }
 
-                if (donor.NAME != null && donor.NAME != "")
+                if (donor.Name != null && donor.Name != "")
                 {
                     if (SQLWhereString != "") { SQLWhereString = SQLWhereString + " and "; }
-                    SQLWhereString = SQLWhereString + " Name like '%" + donor.NAME + "%'";
+                    SQLWhereString = SQLWhereString + " Name like '%" + donor.Name + "%'";
                 }
 
-                if (donor.ADD1 != null && donor.ADD1 != "")
+                if (donor.Address1 != null && donor.Address1 != "")
                 {
                     if (SQLWhereString != "") { SQLWhereString = SQLWhereString + " and "; }
-                    SQLWhereString = SQLWhereString + " Add1 like '%" + donor.ADD1 + "%'";
+                    SQLWhereString = SQLWhereString + " Add1 like '%" + donor.Address1 + "%'";
                 }
                
-                if (donor.CITY != null && donor.CITY != "")
+                if (donor.City != null && donor.City != "")
                 {
                     if (SQLWhereString != "") { SQLWhereString = SQLWhereString + " and "; }
-                    SQLWhereString = SQLWhereString + " City = '" + donor.CITY + "'";
+                    SQLWhereString = SQLWhereString + " City = '" + donor.City + "'";
                 }
 
-                if (donor.PCODE != null && donor.PCODE != "")
+                if (donor.PostCode != null && donor.PostCode != "")
                 {
                     if (SQLWhereString != "") { SQLWhereString = SQLWhereString + " and "; }
-                    SQLWhereString = SQLWhereString + " pcode like '%" + donor.PCODE + "%'";
+                    SQLWhereString = SQLWhereString + " pcode like '%" + donor.PostCode + "%'";
                 }
 
                 if (SQLWhereString != "") { 
@@ -80,19 +80,19 @@ namespace DonorApp.Repositories
                         while (oReader.Read())
                         {
                             Donor matchingPerson = new Donor();
-                            matchingPerson.TITLE = oReader["TITLE"].ToString();
-                            matchingPerson.NAME = oReader["NAME"].ToString();
-                            matchingPerson.CODE = (int)oReader["CODE"];
-                            matchingPerson.PCODE = oReader["PCODE"].ToString();
-                            matchingPerson.ADD1 = oReader["ADD1"].ToString();
-                            matchingPerson.ADD2 = oReader["ADD2"].ToString();
-                            matchingPerson.CITY = oReader["CITY"].ToString();
-                            matchingPerson.COUNTRY = oReader["COUNTRY"].ToString();
-                            matchingPerson.COUNTY = oReader["COUNTY"].ToString();
-                            matchingPerson.EMAIL = oReader["EMAIL"].ToString();
-                            matchingPerson.ERECEIPT = (bool)oReader["ERECEIPT"];
+                            matchingPerson.Title = oReader["TITLE"].ToString();
+                            matchingPerson.Name = oReader["NAME"].ToString();
+                            matchingPerson.Code = (int)oReader["CODE"];
+                            matchingPerson.PostCode = oReader["PCODE"].ToString();
+                            matchingPerson.Address1 = oReader["ADD1"].ToString();
+                            matchingPerson.Address2 = oReader["ADD2"].ToString();
+                            matchingPerson.City = oReader["CITY"].ToString();
+                            matchingPerson.Country = oReader["COUNTRY"].ToString();
+                            matchingPerson.County = oReader["COUNTY"].ToString();
+                            matchingPerson.Email = oReader["EMAIL"].ToString();
+                            matchingPerson.CommunicationByEmail = (bool)oReader["ERECEIPT"];
                             matchingPerson.GAD = (bool)oReader["GAD"];
-                            matchingPerson.MOBILE = oReader["MOBILE"].ToString();
+                            matchingPerson.TelephoneMobile = oReader["MOBILE"].ToString();
 
                             donors.Add(matchingPerson);
                         }
@@ -121,18 +121,19 @@ namespace DonorApp.Repositories
                 {
                     while (oReader.Read())
                     {
-                        matchingPerson.NAME     = oReader["NAME"].ToString();
-                        matchingPerson.CODE     = (int)oReader["CODE"];
-                        matchingPerson.PCODE    = oReader["PCODE"].ToString();
-                        matchingPerson.ADD1 = "test";
-                        matchingPerson.ADD2     = oReader["ADD2"].ToString();
-                        matchingPerson.CITY     = oReader["CITY"].ToString();
-                        matchingPerson.COUNTRY  = oReader["COUNTRY"].ToString();
-                        matchingPerson.COUNTY   = oReader["COUNTY"].ToString();
-                        matchingPerson.EMAIL    = oReader["EMAIL"].ToString();
-                        matchingPerson.ERECEIPT = (bool)oReader["ERECEIPT"];
-                        matchingPerson.GAD      = (bool)oReader["GAD"];
-                        matchingPerson.MOBILE   = oReader["MOBILE"].ToString();
+                        matchingPerson.Title = oReader["TITLE"].ToString();
+                        matchingPerson.Name = oReader["NAME"].ToString();
+                        matchingPerson.Code = (int)oReader["CODE"];
+                        matchingPerson.PostCode = oReader["PCODE"].ToString();
+                        matchingPerson.Address1 = "test";
+                        matchingPerson.Address2 = oReader["ADD2"].ToString();
+                        matchingPerson.City = oReader["CITY"].ToString();
+                        matchingPerson.Country = oReader["COUNTRY"].ToString();
+                        matchingPerson.County = oReader["COUNTY"].ToString();
+                        matchingPerson.Email = oReader["EMAIL"].ToString();
+                        matchingPerson.CommunicationByEmail = (bool)oReader["ERECEIPT"];
+                        matchingPerson.GAD = (bool)oReader["GAD"];
+                        matchingPerson.TelephoneMobile = oReader["MOBILE"].ToString();
                     }
 
                     myConnection.Close();
@@ -152,22 +153,22 @@ namespace DonorApp.Repositories
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 //set up input parameters
-                cmd.Parameters.Add("@title", SqlDbType.NVarChar, 255).Value = aDonor.TITLE;
-                cmd.Parameters.Add("@name", SqlDbType.NVarChar, 255).Value = aDonor.NAME;
-                cmd.Parameters.Add("@type", SqlDbType.Float).Value = aDonor.TYPE;
-                cmd.Parameters.Add("@add1", SqlDbType.NVarChar, 255).Value = aDonor.ADD1;
-                cmd.Parameters.Add("@add2", SqlDbType.NVarChar, 255).Value = aDonor.ADD2;
-                cmd.Parameters.Add("@city", SqlDbType.NVarChar, 255).Value = aDonor.CITY;
-                cmd.Parameters.Add("@pcode", SqlDbType.NVarChar, 255).Value = aDonor.PCODE;
-                cmd.Parameters.Add("@county", SqlDbType.NVarChar, 255).Value = aDonor.COUNTY;
-                cmd.Parameters.Add("@country", SqlDbType.NVarChar, 255).Value = aDonor.COUNTRY;
-                cmd.Parameters.Add("@tel", SqlDbType.NVarChar, 255).Value = aDonor.TEL;
-                cmd.Parameters.Add("@tel_work", SqlDbType.NVarChar, 255).Value = aDonor.TEL_WORK;
-                cmd.Parameters.Add("@mobile", SqlDbType.NVarChar, 50).Value = aDonor.MOBILE;
-                cmd.Parameters.Add("@ntuserwhoadded", SqlDbType.NVarChar, 50).Value = aDonor.NTUSERWHOADDED;
-                cmd.Parameters.Add("@ereceipt", SqlDbType.Bit).Value = aDonor.ERECEIPT;
+                cmd.Parameters.Add("@title", SqlDbType.NVarChar, 255).Value = aDonor.Title;
+                cmd.Parameters.Add("@name", SqlDbType.NVarChar, 255).Value = aDonor.Name;
+                cmd.Parameters.Add("@type", SqlDbType.Float).Value = aDonor.Type;
+                cmd.Parameters.Add("@add1", SqlDbType.NVarChar, 255).Value = aDonor.Address1;
+                cmd.Parameters.Add("@add2", SqlDbType.NVarChar, 255).Value = aDonor.Address2;
+                cmd.Parameters.Add("@city", SqlDbType.NVarChar, 255).Value = aDonor.City;
+                cmd.Parameters.Add("@pcode", SqlDbType.NVarChar, 255).Value = aDonor.PostCode;
+                cmd.Parameters.Add("@county", SqlDbType.NVarChar, 255).Value = aDonor.County;
+                cmd.Parameters.Add("@country", SqlDbType.NVarChar, 255).Value = aDonor.Country;
+                cmd.Parameters.Add("@tel", SqlDbType.NVarChar, 255).Value = aDonor.TelephoneHome;
+                cmd.Parameters.Add("@tel_work", SqlDbType.NVarChar, 255).Value = aDonor.TelephoneWork;
+                cmd.Parameters.Add("@mobile", SqlDbType.NVarChar, 50).Value = aDonor.TelephoneMobile;
+                cmd.Parameters.Add("@ntuserwhoadded", SqlDbType.NVarChar, 50).Value = aDonor.CreatedBy;
+                cmd.Parameters.Add("@ereceipt", SqlDbType.Bit).Value = aDonor.CommunicationByEmail;
                 cmd.Parameters.Add("@gad", SqlDbType.Bit).Value = aDonor.GAD;
-                cmd.Parameters.Add("@email", SqlDbType.NVarChar, 50).Value = aDonor.EMAIL;
+                cmd.Parameters.Add("@email", SqlDbType.NVarChar, 50).Value = aDonor.Email;
 
                 //set up output parameters
                 SqlParameter newDonorCode = new SqlParameter("@o_donor_code", SqlDbType.Int);
@@ -178,10 +179,10 @@ namespace DonorApp.Repositories
                 conn.Open();
                 cmd.ExecuteNonQuery();
                 conn.Close();
-                aDonor.CODE = (int)newDonorCode.Value;
+                aDonor.Code = (int)newDonorCode.Value;
             }
             //return aDonor;
-            return aDonor.CODE;
+            return aDonor.Code;
         }
 
         public void DeleteDonor(int donorID)

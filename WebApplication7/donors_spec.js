@@ -14,21 +14,21 @@ var postcode = "SE193HQ";
 var phonenumber = '0044777888999';
 
 var donor = {
-   "NAME": name,
-   "TYPE": 0,
-   "ADD1": "test",
-   "ADD2": "",
+   "Name": name,
+   "Type": 0,
+   "Address1": "test",
+   "Address2": "",
    "CITY": "Amsterdam",
-   "PCODE": postcode,
-   "EMAIL": email,
-   "COUNTY": "",
-   "COUNTRY": "United Kingdom",
-   "TEL": phonenumber,
-   "TEL_WORK": null,
-   "MOBILE": "",
-   "NTUSERWHOADDED": null,
-   "TITLE": null,
-   "ERECEIPT": true,
+   "PostCode": postcode,
+   "Email": email,
+   "County": "",
+   "Country": "United Kingdom",
+   "TelephoneHome": phonenumber,
+   "TelephoneWork": null,
+   "TelephoneMobile": "",
+   "CreatedBy": null,
+   "Title": null,
+   "CommunicationByEmail": true,
    "GAD": true
 }
 
@@ -56,9 +56,9 @@ frisby.create('Add Donor and retrieve using Location header')
 			.expectStatus(200)
 			.expectHeaderContains('Content-Type', 'application/json')	// use expectHeaderContains instead of expectHeader to cater for 'application/json; charset=utf-8'
 			.expectJSON({
-				NAME: name,
-				PCODE: postcode,
-				EMAIL: email
+				Name: name,
+				PostCode: postcode,
+				Email: email
 			})
 			.toss()
 	})
@@ -76,9 +76,9 @@ frisby.create('Search Donors by Code')
 			})
 			.expectStatus(200)
 			.expectJSON({
-				NAME: name,
-				PCODE: postcode,
-				EMAIL: email
+				Name: name,
+				PostCode: postcode,
+				Email: email
 			})
 			.toss()
 	})
@@ -96,7 +96,7 @@ frisby.create('Search Donors by Email')
 			.expectStatus(200)
 			//	TODO: check that the JSON response contains an array of at least one element
 			.expectJSON('*', {
-				EMAIL: email
+				Email: email
 			})
 			.toss()
 	})
@@ -114,7 +114,7 @@ frisby.create('Search Donors by Postcode')
 			.expectStatus(200)
 			//	TODO: check that the JSON response contains an array of at least one element
 			.expectJSON('*', {
-				PCODE: postcode
+				PostCode: postcode
 			})
 			.toss()
 	})
@@ -132,7 +132,7 @@ frisby.create('Search Donors by Phone')
 			.expectStatus(200)
 			//	TODO: check that the JSON response contains an array of at least one element
 			.expectJSON('*', {
-				TEL: phonenumber
+				TelephoneHome: phonenumber
 			})
 			.toss()
 	})
@@ -150,7 +150,7 @@ frisby.create('Update Donor')
 			})
 			.expectStatus(200)
 			.expectJSON({
-				NAME: name
+				Name: name
 			})
 			.after(function(err, res, body) {
 				var updatedDonor = donor;
@@ -169,7 +169,7 @@ frisby.create('Update Donor')
 							.expectStatus(200)
 							//.inspectJSON()
 							.expectJSON({
-								NAME: wrongName
+								Name: wrongName
 							})
 							.toss()
 					})
@@ -191,7 +191,7 @@ frisby.create('Delete Donor')
 			})
 			.expectStatus(200)
 			.expectJSON({
-				NAME: name
+				Name: name
 			})
 			.after(function(err, res, body) {
 				frisby.create('Delete the Donor')
