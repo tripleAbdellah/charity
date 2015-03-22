@@ -13,21 +13,9 @@ namespace DonorApp.Controllers
     [RoutePrefix("api/donors")]
     public class DonorsController : ApiController
     {
-        static readonly IDonorsRepository repository = new DonorsRepository();
-        /*
-        [HttpGet]
-        public IEnumerable<Donor> GetAllDonors()
-        {
-            try
-            {
-                return repository.GetAllDonors();
-            }
-            catch (NoDonorsFoundException e)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-        }
-        */
+        //static readonly IDonorsRepository repository = new DonorsRepository();
+        static readonly IDonorsRepository repository = new DonorApp.Repositories.Mock.DonorsRepository();
+
         [HttpGet]
         [Route("", Name="SearchDonors")]
         public HttpResponseMessage GetDonors([FromUri] SearchDonorRequest searchRequest)
@@ -59,25 +47,26 @@ namespace DonorApp.Controllers
             }
             catch (NoDonorsFoundException e)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return Request.CreateResponse(HttpStatusCode.NotFound);
             }
             catch (InvalidRequestException ire)
             {
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
         }
 
         [HttpGet]
         [Route("{id:int}", Name="GetDonorById")]
-        public Donor GetDonor(int id)
+        public HttpResponseMessage GetDonor(int id)
         {
         	try
         	{
-            	return repository.GetDonor(id);
+                Donor donor = repository.GetDonor(id);
+                return Request.CreateResponse<Donor>(HttpStatusCode.OK, donor);
             }
             catch (DonorNotFoundException e)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return Request.CreateResponse(HttpStatusCode.NotFound);
             }
         }
         
@@ -87,48 +76,52 @@ namespace DonorApp.Controllers
         {
         	try
         	{
-            	donor = repository.AddDonor(donor);
-            	var response = Request.CreateResponse<Donor>(HttpStatusCode.Created, donor);
+            	//donor = repository.AddDonor(donor);
+                var donorID = repository.AddDonor(donor);
+                var response = Request.CreateResponse(HttpStatusCode.Created);
 
-	            string uri = Url.Link("GetDonorById", new { donorID = donor.CODE });
-	            response.Headers.Location = new Uri(uri);
+	            //string uri = Url.Link("GetDonorById", new { id = donor.CODE });
+                string uri = Url.Link("GetDonorById", new { id = donorID });
+                response.Headers.Location = new Uri(uri);
 	            return response;
             }
             catch (InvalidDonorException ide)
             {
-            	throw new HttpResponseException(HttpStatusCode.BadRequest);
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
         }
 
         [HttpPut]
         [Route("{id:int}", Name="UpdateDonor")]
-        public void UpdateDonor(int donorID, Donor donor)
+        public HttpResponseMessage UpdateDonor(int id, Donor donor)
         {
         	try
         	{
-            	repository.UpdateDonor(donorID, donor);
+            	repository.UpdateDonor(id, donor);
+                return Request.CreateResponse(HttpStatusCode.NoContent);
             }
             catch (DonorNotFoundException e)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return Request.CreateResponse(HttpStatusCode.NotFound);
             }
             catch (InvalidDonorException ide)
             {
-            	throw new HttpResponseException(HttpStatusCode.BadRequest);
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
         }
 
         [HttpDelete]
         [Route("{id:int}", Name = "DeleteDonor")]
-        public void DeleteDonor(int donorID)
+        public HttpResponseMessage DeleteDonor(int id)
         {
         	try
         	{
-            	repository.DeleteDonor(donorID);
+            	repository.DeleteDonor(id);
+                return Request.CreateResponse(HttpStatusCode.NoContent);
             }
             catch (DonorNotFoundException e)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return Request.CreateResponse(HttpStatusCode.NotFound);
             }
         }
 

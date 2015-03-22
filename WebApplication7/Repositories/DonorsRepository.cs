@@ -142,7 +142,8 @@ namespace DonorApp.Repositories
             return matchingPerson;
         }
 
-        public Donor AddDonor(Donor aDonor)
+        //public Donor AddDonor(Donor aDonor)
+        public int AddDonor(Donor aDonor)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["October2001"].ConnectionString;
             using(SqlConnection conn = new SqlConnection(connectionString))
@@ -179,7 +180,8 @@ namespace DonorApp.Repositories
                 conn.Close();
                 aDonor.CODE = (int)newDonorCode.Value;
             }
-            return aDonor;
+            //return aDonor;
+            return aDonor.CODE;
         }
 
         public void DeleteDonor(int donorID)
@@ -187,7 +189,7 @@ namespace DonorApp.Repositories
             var con = ConfigurationManager.ConnectionStrings["October2001"].ToString();
             using (SqlConnection myConnection = new SqlConnection(con))
             {
-                string oString = string.Format("DELETE FROM mail WHERE CODE = '{0}", donorID); 
+                string oString = string.Format("DELETE FROM mail WHERE CODE = {0}", donorID); 
 
                 using (SqlCommand oCmd = new SqlCommand(oString, myConnection))
                 {

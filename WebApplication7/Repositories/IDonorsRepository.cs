@@ -18,7 +18,8 @@ namespace DonorApp.Repositories
         Donor GetDonor(int donorID);
 
         //   throws InvalidDonorException
-        Donor AddDonor(Donor item);
+        //Donor AddDonor(Donor item);
+        int AddDonor(Donor item);
         //   throws DonorNotFoundException, InvalidDonorException
         void UpdateDonor(int donorID, Donor item);
         //   throws DonorNotFoundException

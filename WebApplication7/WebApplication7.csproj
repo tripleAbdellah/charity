@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AngularJS.html" />
+    <Content Include="donors_spec.js" />
     <Content Include="Global.asax" />
     <Content Include="html\AddDonorForm.html" />
     <Content Include="html\AllocationForm.html" />
@@ -209,7 +210,18 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AllocationController.cs" />
+    <Compile Include="Controllers\AllocationsController.cs" />
+    <Compile Include="Models\Card.cs" />
+    <Compile Include="Models\InvalidCardException.cs" />
+    <Compile Include="Models\InvalidDonationException.cs" />
+    <Compile Include="Models\NoDonationsFoundException.cs" />
+    <Compile Include="Repositories\DonationsRepository.cs" />
+    <Compile Include="Models\Donation.cs" />
+    <Compile Include="Controllers\DonationsController.cs" />
     <Compile Include="Controllers\DonorsController.cs" />
+    <Compile Include="Repositories\IAllocationsRepository.cs" />
+    <Compile Include="Repositories\IDonationsRepository.cs" />
+    <Compile Include="Models\Allocation.cs" />
     <Compile Include="Models\InvalidRequestException.cs" />
     <Compile Include="Models\DonorNotFoundException.cs" />
     <Compile Include="Models\InvalidDonorException.cs" />
@@ -217,6 +229,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\OrphanAllocation.cs" />
+    <Compile Include="Models\PricedAllocation.cs" />
+    <Compile Include="Models\QurbaniAllocation.cs" />
     <Compile Include="Models\SearchDonorRequest.cs" />
     <Compile Include="Repositories\AllocationRepository.cs" />
     <Compile Include="Repositories\DonorsRepository.cs" />
@@ -226,6 +241,8 @@
     <Compile Include="Models\ShoppingCategory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IDonorsRepository.cs" />
+    <Compile Include="Repositories\Mock\AllocationsRepository.cs" />
+    <Compile Include="Repositories\Mock\DonorsRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
