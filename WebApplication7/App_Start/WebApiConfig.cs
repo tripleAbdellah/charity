@@ -8,6 +8,7 @@ namespace WebApplication7
         {
             // Web API routes
             config.MapHttpAttributeRoutes();
+            config.Filters.Add(new WebApplication7.Filters.SystemExceptionFilter());
         }
     }
 }

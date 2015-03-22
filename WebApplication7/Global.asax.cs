@@ -13,7 +13,8 @@ namespace WebApplication7
         {
             //WebApiConfig.Register(GlobalConfiguration.Configuration); 
             GlobalConfiguration.Configure(WebApiConfig.Register);
-           
+            //  Log4Net Configuration
+            log4net.Config.XmlConfigurator.Configure();
         }
     }
 }
