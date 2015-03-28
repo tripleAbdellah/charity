@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -12,242 +12,448 @@ namespace DonorApp.Repositories
 {
     public class DonorsRepository : IDonorsRepository
     {
-        public IEnumerable<Donor> GetAllDonors()
-        {
-            Donor donor = new Donor();
-            donor.CODE = 100;
-            return GetDonors(donor);
-        }
+
 
         public IEnumerable<Donor> GetDonors(SearchDonorRequest searchRequest)
         {
+
             Donor donor = new Donor();
-            donor.CODE = searchRequest.Code;
-            donor.PCODE = searchRequest.PostCode;
-            donor.EMAIL = searchRequest.Email;
-            //donor.TEL = searchRequest.PhoneNumber;
+            donor.Code = searchRequest.Code;
+            donor.PostCode = searchRequest.PostCode;
+            donor.Email = searchRequest.Email;
+            //there are 3 telephone fields, so check all three for potential donors. 
+            donor.TelephoneMobile = searchRequest.PhoneNumber;
+            donor.TelephoneWork = searchRequest.PhoneNumber;
+            donor.TelephoneHome = searchRequest.PhoneNumber;
+
             return GetDonors(donor);
         }
 
         public IEnumerable<Donor> GetDonors(Donor donor)
         {
             List<Donor> donors = new List<Donor>();
+            SqlConnection myConnection = null;
+            SqlCommand oCmd = null;
 
             var con = ConfigurationManager.ConnectionStrings["October2001"].ToString();
-           
-            using (SqlConnection myConnection = new SqlConnection(con))
+
+            try
             {
-                //building the SQL string
-                string SQLWhereString = "";
-
-                if (donor.CODE > 0)
+                using (myConnection = new SqlConnection(con))
                 {
-                    SQLWhereString = " Code = " + donor.CODE ;
-                }
+                    //building the SQL string
+                    string SQLWhereString = "";
 
-                if (donor.NAME != null && donor.NAME != "")
-                {
-                    if (SQLWhereString != "") { SQLWhereString = SQLWhereString + " and "; }
-                    SQLWhereString = SQLWhereString + " Name like '%" + donor.NAME + "%'";
-                }
 
-                if (donor.ADD1 != null && donor.ADD1 != "")
-                {
-                    if (SQLWhereString != "") { SQLWhereString = SQLWhereString + " and "; }
-                    SQLWhereString = SQLWhereString + " Add1 like '%" + donor.ADD1 + "%'";
-                }
-               
-                if (donor.CITY != null && donor.CITY != "")
-                {
-                    if (SQLWhereString != "") { SQLWhereString = SQLWhereString + " and "; }
-                    SQLWhereString = SQLWhereString + " City = '" + donor.CITY + "'";
-                }
-
-                if (donor.PCODE != null && donor.PCODE != "")
-                {
-                    if (SQLWhereString != "") { SQLWhereString = SQLWhereString + " and "; }
-                    SQLWhereString = SQLWhereString + " pcode like '%" + donor.PCODE + "%'";
-                }
-
-                if (SQLWhereString != "") { 
-
-                    string oString = "Select * from mail where " + SQLWhereString ;
-                    SqlCommand oCmd = new SqlCommand(oString, myConnection);
-                    //oCmd.Parameters.AddWithValue("@Fname", "abdellah");
-                    myConnection.Open();
-                    using (SqlDataReader oReader = oCmd.ExecuteReader())
+                    if (donor.Code > 0)
                     {
-                        while (oReader.Read())
-                        {
-                            Donor matchingPerson = new Donor();
-                            matchingPerson.TITLE = oReader["TITLE"].ToString();
-                            matchingPerson.NAME = oReader["NAME"].ToString();
-                            matchingPerson.CODE = (int)oReader["CODE"];
-                            matchingPerson.PCODE = oReader["PCODE"].ToString();
-                            matchingPerson.ADD1 = oReader["ADD1"].ToString();
-                            matchingPerson.ADD2 = oReader["ADD2"].ToString();
-                            matchingPerson.CITY = oReader["CITY"].ToString();
-                            matchingPerson.COUNTRY = oReader["COUNTRY"].ToString();
-                            matchingPerson.COUNTY = oReader["COUNTY"].ToString();
-                            matchingPerson.EMAIL = oReader["EMAIL"].ToString();
-                            matchingPerson.ERECEIPT = (bool)oReader["ERECEIPT"];
-                            matchingPerson.GAD = (bool)oReader["GAD"];
-                            matchingPerson.MOBILE = oReader["MOBILE"].ToString();
-
-                            donors.Add(matchingPerson);
-                        }
-
-                        myConnection.Close();
+                        SQLWhereString = " Code = " + donor.Code;
                     }
+
+                    if (donor.PostCode != null && donor.PostCode != "")
+                    {
+                        if (SQLWhereString != "") { SQLWhereString = SQLWhereString + " and "; }
+                        SQLWhereString = SQLWhereString + " pcode like '%" + donor.PostCode + "%'";
+                    }
+
+                    if (donor.Email != null && donor.Email != "")
+                    {
+                        if (SQLWhereString != "") { SQLWhereString = SQLWhereString + " and "; }
+                        SQLWhereString = SQLWhereString + " Email = '" + donor.Email + "'";
+                    }
+
+                    if (donor.TelephoneHome != null && donor.TelephoneHome != "")
+                    {
+                        if (SQLWhereString != "") { SQLWhereString = SQLWhereString + " or "; }
+                        SQLWhereString = SQLWhereString + " Tel like '%" + donor.TelephoneHome + "%'";
+                    }
+
+                    if (donor.TelephoneMobile != null && donor.TelephoneMobile != "")
+                    {
+                        if (SQLWhereString != "") { SQLWhereString = SQLWhereString + " or "; }
+                        SQLWhereString = SQLWhereString + " Mobile like '%" + donor.TelephoneMobile + "%'";
+                    }
+
+
+                    if (donor.TelephoneWork != null && donor.TelephoneWork != "")
+                    {
+                        if (SQLWhereString != "") { SQLWhereString = SQLWhereString + " or "; }
+                        SQLWhereString = SQLWhereString + " Tel_Work like '%" + donor.TelephoneWork + "%'";
+                    }
+
+                    if (donor.Name != null && donor.Name != "")
+                    {
+                        if (SQLWhereString != "") { SQLWhereString = SQLWhereString + " and "; }
+                        SQLWhereString = SQLWhereString + " Name like '%" + donor.Name + "%'";
+                    }
+
+                    if (donor.Address1 != null && donor.Address1 != "")
+                    {
+                        if (SQLWhereString != "") { SQLWhereString = SQLWhereString + " and "; }
+                        SQLWhereString = SQLWhereString + " Add1 like '%" + donor.Address1 + "%'";
+                    }
+
+                    if (donor.City != null && donor.City != "")
+                    {
+                        if (SQLWhereString != "") { SQLWhereString = SQLWhereString + " and "; }
+                        SQLWhereString = SQLWhereString + " City = '" + donor.City + "'";
+                    }
+
+                    if (SQLWhereString != "")
+                    {
+
+                        string oString = "Select * from mail where " + SQLWhereString;
+                        oCmd = new SqlCommand(oString, myConnection);
+                        myConnection.Open();
+                        using (SqlDataReader oReader = oCmd.ExecuteReader())
+                        {
+                            while (oReader.Read())
+                            {
+                                Donor matchingDonor = new Donor();
+
+                                matchingDonor = GetMatchingDonor((IDataRecord)oReader); ;
+
+                                donors.Add(matchingDonor);
+                            }
+
+                            myConnection.Close();
+                        }
+                    }
+
                 }
             }
+            finally
+            {
+                if (myConnection != null)
+                    myConnection.Dispose();
+
+                if (oCmd != null)
+                    oCmd.Dispose();
+            }
+
+            if (!donors.Any())
+                throw new NoDonorsFoundException();
 
             return donors;
         }
 
         public Donor GetDonor(int donorID)
         {
-            Donor matchingPerson = new Donor();
+            Donor matchingDonor = null;
+            SqlConnection myConnection = null;
+            SqlCommand oCmd = null;
 
             var con = ConfigurationManager.ConnectionStrings["October2001"].ToString();
 
-            using (SqlConnection myConnection = new SqlConnection(con))
+            try
             {
-                string oString = "Select * from mail where Code=@DonorCode";
-                SqlCommand oCmd = new SqlCommand(oString, myConnection);
-                oCmd.Parameters.AddWithValue("@DonorCode", donorID);
-                myConnection.Open();
-                using (SqlDataReader oReader = oCmd.ExecuteReader())
+                using (myConnection = new SqlConnection(con))
                 {
-                    while (oReader.Read())
+                    string oString = "Select * from mail where Code=@DonorCode";
+                    oCmd = new SqlCommand(oString, myConnection);
+                    oCmd.Parameters.AddWithValue("@DonorCode", donorID);
+                    myConnection.Open();
+                    using (SqlDataReader oReader = oCmd.ExecuteReader())
                     {
-                        matchingPerson.NAME     = oReader["NAME"].ToString();
-                        matchingPerson.CODE     = (int)oReader["CODE"];
-                        matchingPerson.PCODE    = oReader["PCODE"].ToString();
-                        matchingPerson.ADD1 = "test";
-                        matchingPerson.ADD2     = oReader["ADD2"].ToString();
-                        matchingPerson.CITY     = oReader["CITY"].ToString();
-                        matchingPerson.COUNTRY  = oReader["COUNTRY"].ToString();
-                        matchingPerson.COUNTY   = oReader["COUNTY"].ToString();
-                        matchingPerson.EMAIL    = oReader["EMAIL"].ToString();
-                        matchingPerson.ERECEIPT = (bool)oReader["ERECEIPT"];
-                        matchingPerson.GAD      = (bool)oReader["GAD"];
-                        matchingPerson.MOBILE   = oReader["MOBILE"].ToString();
-                    }
 
-                    myConnection.Close();
+                        while (oReader.Read())
+                        {
+                            matchingDonor = GetMatchingDonor((IDataRecord)oReader);
+                        }
+
+                        if (matchingDonor == null)
+                        {
+                            throw new DonorNotFoundException();
+                        }
+
+                        myConnection.Close();
+                    }
                 }
+
+            }
+            finally
+            {
+                if (myConnection != null)
+                    myConnection.Dispose();
+
+                if (oCmd != null)
+                    oCmd.Dispose();
             }
 
-            return matchingPerson;
+            return matchingDonor;
         }
+
+        private Donor GetMatchingDonor(IDataRecord oReader)
+        {
+            /*AAA: Reason for this method is to reuse the same logic in getDonor and getDonors */
+
+            Donor matchingDonor = new Donor();
+
+            matchingDonor.Code = (int)oReader["CODE"];
+            matchingDonor.Title = oReader["TITLE"].ToString();
+            matchingDonor.Name = oReader["NAME"].ToString();
+
+            //address
+            matchingDonor.PostCode = oReader["PCODE"].ToString();
+            matchingDonor.Address1 = oReader["ADD1"].ToString();
+            matchingDonor.Address2 = oReader["ADD2"].ToString();
+            matchingDonor.City = oReader["CITY"].ToString();
+            matchingDonor.Country = oReader["COUNTRY"].ToString();
+            matchingDonor.County = oReader["COUNTY"].ToString();
+
+            //communication 
+            matchingDonor.Email = oReader["EMAIL"].ToString();
+            if (oReader["ERECEIPT"] != null && oReader["ERECEIPT"].ToString() != "")
+                matchingDonor.CommunicationByEmail = (bool)oReader["ERECEIPT"];
+
+            matchingDonor.TelephoneMobile = oReader["MOBILE"].ToString();
+            matchingDonor.TelephoneHome = oReader["TEL"].ToString();
+            matchingDonor.TelephoneWork = oReader["TEL_WORK"].ToString();
+            matchingDonor.LanguageSpoken = oReader["ARB_ENG"].ToString();
+
+            //GAD
+            matchingDonor.GAD = (bool)oReader["GAD"];
+            matchingDonor.GADName = oReader["GAD NAME"].ToString();
+            if (oReader["GADDate"] != null && oReader["GADDate"].ToString() != "")
+                matchingDonor.GADDate = (DateTime)oReader["GADDate"];
+
+            if (oReader["VerbalGAD"] != null && oReader["VerbalGAD"].ToString() != "")
+                matchingDonor.GADVerbal = (bool)oReader["VerbalGAD"];
+
+            //Audit
+            matchingDonor.CreatedBy = oReader["NTUSERWHOADDED"].ToString();
+
+            return matchingDonor;
+        }
+
 
         public Donor AddDonor(Donor aDonor)
         {
+            SqlConnection conn = null;
+            SqlCommand cmd = null;
+
             string connectionString = ConfigurationManager.ConnectionStrings["October2001"].ConnectionString;
-            using(SqlConnection conn = new SqlConnection(connectionString))
+            if (aDonor != null)
             {
-                SqlCommand cmd = new SqlCommand("insert_donor", conn);
-                cmd.CommandType = CommandType.StoredProcedure;
 
-                //set up input parameters
-                cmd.Parameters.Add("@title", SqlDbType.NVarChar, 255).Value = aDonor.TITLE;
-                cmd.Parameters.Add("@name", SqlDbType.NVarChar, 255).Value = aDonor.NAME;
-                cmd.Parameters.Add("@type", SqlDbType.Float).Value = aDonor.TYPE;
-                cmd.Parameters.Add("@add1", SqlDbType.NVarChar, 255).Value = aDonor.ADD1;
-                cmd.Parameters.Add("@add2", SqlDbType.NVarChar, 255).Value = aDonor.ADD2;
-                cmd.Parameters.Add("@city", SqlDbType.NVarChar, 255).Value = aDonor.CITY;
-                cmd.Parameters.Add("@pcode", SqlDbType.NVarChar, 255).Value = aDonor.PCODE;
-                cmd.Parameters.Add("@county", SqlDbType.NVarChar, 255).Value = aDonor.COUNTY;
-                cmd.Parameters.Add("@country", SqlDbType.NVarChar, 255).Value = aDonor.COUNTRY;
-                cmd.Parameters.Add("@tel", SqlDbType.NVarChar, 255).Value = aDonor.TEL;
-                cmd.Parameters.Add("@tel_work", SqlDbType.NVarChar, 255).Value = aDonor.TEL_WORK;
-                cmd.Parameters.Add("@mobile", SqlDbType.NVarChar, 50).Value = aDonor.MOBILE;
-                cmd.Parameters.Add("@ntuserwhoadded", SqlDbType.NVarChar, 50).Value = aDonor.NTUSERWHOADDED;
-                cmd.Parameters.Add("@ereceipt", SqlDbType.Bit).Value = aDonor.ERECEIPT;
-                cmd.Parameters.Add("@gad", SqlDbType.Bit).Value = aDonor.GAD;
-                cmd.Parameters.Add("@email", SqlDbType.NVarChar, 50).Value = aDonor.EMAIL;
+                /*mandatory fields check, otherwise throw: InvalidDonorException, or should this validation check  done in stored procedure?? 
+                 * Name
+                 * Address1
+                 * City
+                 * PostCode
+                 * Country
+                 * DonorType
+                 * GAD
+                 */
+                if ((aDonor.Name == null || aDonor.Name.Length < 2) ||
+                    (aDonor.Address1 == null || aDonor.Address1.Length < 2) ||
+                    (aDonor.City == null || aDonor.City.Length < 2) ||
+                    (aDonor.PostCode == null || aDonor.PostCode.Length < 5) || (!isDonorTypeValid(aDonor.Type))
+                    )
+                    throw new InvalidDonorException();
 
-                //set up output parameters
-                SqlParameter newDonorCode = new SqlParameter("@o_donor_code", SqlDbType.Int);
-                newDonorCode.Direction = ParameterDirection.Output;
-                cmd.Parameters.Add(newDonorCode);
+                //if GAD is set then also GADName is required 
+                if (aDonor.GAD) { 
+                  if (aDonor.GADName == null || aDonor.GADName.Length < 2)
+                      throw new InvalidDonorException();
+                }
 
-                //execute the query
-                conn.Open();
-                cmd.ExecuteNonQuery();
-                conn.Close();
-                aDonor.CODE = (int)newDonorCode.Value;
+                try
+                {
+                    using (conn = new SqlConnection(connectionString))
+                    {
+                        cmd = new SqlCommand("insert_donor", conn);
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        //set up input parameters
+                        cmd.Parameters.Add("@title", SqlDbType.NVarChar, 255).Value = aDonor.Title;
+                        cmd.Parameters.Add("@name", SqlDbType.NVarChar, 255).Value = aDonor.Name;
+                        cmd.Parameters.Add("@type", SqlDbType.Float).Value = aDonor.Type;
+                        cmd.Parameters.Add("@add1", SqlDbType.NVarChar, 255).Value = aDonor.Address1;
+                        cmd.Parameters.Add("@add2", SqlDbType.NVarChar, 255).Value = aDonor.Address2;
+                        cmd.Parameters.Add("@city", SqlDbType.NVarChar, 255).Value = aDonor.City;
+                        cmd.Parameters.Add("@pcode", SqlDbType.NVarChar, 255).Value = aDonor.PostCode;
+                        cmd.Parameters.Add("@county", SqlDbType.NVarChar, 255).Value = aDonor.County;
+                        cmd.Parameters.Add("@country", SqlDbType.NVarChar, 255).Value = aDonor.Country;
+                        cmd.Parameters.Add("@tel", SqlDbType.NVarChar, 255).Value = aDonor.TelephoneHome;
+                        cmd.Parameters.Add("@tel_work", SqlDbType.NVarChar, 255).Value = aDonor.TelephoneWork;
+                        cmd.Parameters.Add("@mobile", SqlDbType.NVarChar, 50).Value = aDonor.TelephoneMobile;
+                        cmd.Parameters.Add("@ntuserwhoadded", SqlDbType.NVarChar, 50).Value = aDonor.CreatedBy;
+                        cmd.Parameters.Add("@ereceipt", SqlDbType.Bit).Value = aDonor.CommunicationByEmail;
+                        cmd.Parameters.Add("@gad", SqlDbType.Bit).Value = aDonor.GAD;
+                        cmd.Parameters.Add("@gadVerbal", SqlDbType.Bit).Value = aDonor.GADVerbal;
+                        cmd.Parameters.Add("@gadName", SqlDbType.NVarChar, 255).Value = aDonor.GADName;
+                        cmd.Parameters.Add("@email", SqlDbType.NVarChar, 50).Value = aDonor.Email;
+                        cmd.Parameters.Add("@ARB_ENG", SqlDbType.NVarChar, 50).Value = aDonor.LanguageSpoken;
+
+                        //set up output parameters
+                        SqlParameter newDonorCode = new SqlParameter("@o_donor_code", SqlDbType.Int);
+                        newDonorCode.Direction = ParameterDirection.Output;
+                        cmd.Parameters.Add(newDonorCode);
+
+                        //execute the query
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                        conn.Close();
+                        aDonor.Code = (int)newDonorCode.Value;
+                    }
+                }
+                finally
+                {
+                    if (conn != null)
+                        conn.Dispose();
+
+                    if (cmd != null)
+                        cmd.Dispose();
+                }
             }
+            else {
+                throw new InvalidDonorException(); 
+            }
+
             return aDonor;
         }
 
+        private Boolean isDonorTypeValid(int donorType) {
+            SqlConnection myConnection = null;
+            SqlCommand oCmd = null;
+            Boolean isValid = false;
+           
+            var con = ConfigurationManager.ConnectionStrings["October2001"].ToString();
+            using (myConnection = new SqlConnection(con))
+            {
+                string oString = string.Format("Select * from ADDRESS_CATEGORY WHERE ADDRESS_CATEGORY.[ADDRESS TYPE] = {0}", donorType);
+                try
+                {
+                    oCmd = new SqlCommand(oString, myConnection);
+                    myConnection.Open();
+                    using (SqlDataReader oReader = oCmd.ExecuteReader())
+                    {
+                        oReader.Read();
+                        isValid = oReader.HasRows;
+                        oReader.Close();
+                    }
+                    myConnection.Close();
+                }
+                finally
+                {
+                    if (myConnection != null)
+                        myConnection.Dispose();
+
+                    if (oCmd != null)
+                        oCmd.Dispose();
+
+                }
+            }
+            return isValid; 
+        }
+
+
+        public void UpdateDonor(int donorID, Donor aDonor)
+        {
+            SqlConnection conn = null;
+            SqlCommand cmd = null;
+
+            if (aDonor != null)
+            {
+                string connectionString = ConfigurationManager.ConnectionStrings["October2001"].ConnectionString;
+
+                try
+                {
+                    using (conn = new SqlConnection(connectionString))
+                    {
+                        cmd = new SqlCommand("update_donor", conn);
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        //set up input parameters
+                        cmd.Parameters.Add("@donor_code", SqlDbType.Int, 255).Value = donorID;
+                        cmd.Parameters.Add("@title", SqlDbType.NVarChar, 255).Value = aDonor.Title;
+                        cmd.Parameters.Add("@name", SqlDbType.NVarChar, 255).Value = aDonor.Name;
+                        cmd.Parameters.Add("@type", SqlDbType.Float).Value = aDonor.Type;
+                        cmd.Parameters.Add("@add1", SqlDbType.NVarChar, 255).Value = aDonor.Address1;
+                        cmd.Parameters.Add("@add2", SqlDbType.NVarChar, 255).Value = aDonor.Address2;
+                        cmd.Parameters.Add("@city", SqlDbType.NVarChar, 255).Value = aDonor.City;
+                        cmd.Parameters.Add("@pcode", SqlDbType.NVarChar, 255).Value = aDonor.PostCode;
+                        cmd.Parameters.Add("@county", SqlDbType.NVarChar, 255).Value = aDonor.County;
+                        cmd.Parameters.Add("@country", SqlDbType.NVarChar, 255).Value = aDonor.Country;
+                        cmd.Parameters.Add("@tel", SqlDbType.NVarChar, 255).Value = aDonor.TelephoneHome;
+                        cmd.Parameters.Add("@tel_work", SqlDbType.NVarChar, 255).Value = aDonor.TelephoneWork;
+                        cmd.Parameters.Add("@mobile", SqlDbType.NVarChar, 50).Value = aDonor.TelephoneMobile;
+                        cmd.Parameters.Add("@ntuserwhoadded", SqlDbType.NVarChar, 50).Value = aDonor.CreatedBy;
+                        cmd.Parameters.Add("@ereceipt", SqlDbType.Bit).Value = aDonor.CommunicationByEmail;
+                        cmd.Parameters.Add("@gad", SqlDbType.Bit).Value = aDonor.GAD;
+                        cmd.Parameters.Add("@gadVerbal", SqlDbType.Bit).Value = aDonor.GADVerbal;
+                        cmd.Parameters.Add("@gadName", SqlDbType.NVarChar, 255).Value = aDonor.GADName;
+                        cmd.Parameters.Add("@email", SqlDbType.NVarChar, 50).Value = aDonor.Email;
+                        cmd.Parameters.Add("@ARB_ENG", SqlDbType.NVarChar, 50).Value = aDonor.LanguageSpoken;
+
+                        //set up output parameters
+                        SqlParameter donorNotFound = new SqlParameter("@o_donorNotFound", SqlDbType.Bit);
+                        donorNotFound.Direction = ParameterDirection.Output;
+                        cmd.Parameters.Add(donorNotFound);
+
+                        //execute the query
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                        conn.Close();
+
+                        Debug.Write("wat is de value;" + donorNotFound.Value);
+
+                        if ((bool)donorNotFound.Value)
+                            throw new DonorNotFoundException();
+
+                    }
+                }
+                finally
+                {
+                    if (conn != null)
+                        conn.Dispose();
+
+                    if (cmd != null)
+                        cmd.Dispose();
+                }
+
+            }
+            else
+            {
+                throw new InvalidDonorException();
+            }
+        }
+
+
         public void DeleteDonor(int donorID)
         {
-            var con = ConfigurationManager.ConnectionStrings["October2001"].ToString();
-            using (SqlConnection myConnection = new SqlConnection(con))
-            {
-                string oString = string.Format("DELETE FROM mail WHERE CODE = '{0}", donorID); 
-
-                using (SqlCommand oCmd = new SqlCommand(oString, myConnection))
-                {
-                    myConnection.Open();
-                    oCmd.ExecuteNonQuery();
-                    myConnection.Close();
-                }
-            }
-        }
-
-        private int getDonorID() {
+            SqlConnection myConnection = null;
+            SqlCommand oCmd = null;
 
             var con = ConfigurationManager.ConnectionStrings["October2001"].ToString();
-            using (SqlConnection myConnection = new SqlConnection(con))
+            using (myConnection = new SqlConnection(con))
             {
-                string oString = string.Format("select max(code) AS CODE from mail");
-                SqlCommand oCmd = new SqlCommand(oString, myConnection);
-                myConnection.Open();
-                using (SqlDataReader oReader = oCmd.ExecuteReader())
+                string oString = string.Format("DELETE FROM mail WHERE CODE = {0}", donorID);
+                try
                 {
-                    while (oReader.Read())
+                    using (oCmd = new SqlCommand(oString, myConnection))
                     {
-                        return  (Convert.ToInt32(oReader[0]) + 1);
+                        myConnection.Open();
+                        var success = oCmd.ExecuteNonQuery();
+                        myConnection.Close();
+                        //if not 1 then record is not found/deleted
+                        if (success != 1)
+                            throw new DonorNotFoundException();
+
                     }
-
-                    myConnection.Close();
                 }
-            }
-
-            return 0;
-        }
-
-        public void UpdateDonor(int donorID, Donor donor)
-        {
-            /*string query = string.Format("UPDATE [Northwind].[dbo].[Customers] " +
-                    " SET [CustomerID] = '{0}'," +
-                    " [CompanyName] = '{1}', " +
-                    " [ContactName] = '{2}', " +
-                    " [ContactTitle] = '{3}', " +
-                    " [Address] = '{4}', " +
-                    " [City] = '{5}', " +
-                    " [Region] = '{6}', " +
-                    " [PostalCode] = '{7}', " +
-                    " [Country] = '{8}', " +
-                    " [Phone] = '{9}', " +
-                    " [Fax] = '{10}' " +
-                    " WHERE CustomerID LIKE '{11}'", donor.CustomerID, donor.CompanyName, donor.ContactName, donor.ContactTitle, donor.Address, donor.City, donor.Region,
-                     donor.PostalCode, donor.Country, donor.Phone, donor.Fax, donor.CustomerID);                    
-            
-            using (SqlConnection con =
-                    new SqlConnection("your connection string"))
-            {
-                using (SqlCommand cmd = new SqlCommand(query, con))
+                finally
                 {
-                    con.Open();
-                    cmd.ExecuteNonQuery();
-                    con.Close();
+                    if (myConnection != null)
+                        myConnection.Dispose();
+
+                    if (oCmd != null)
+                        oCmd.Dispose();
+
                 }
             }
-            */
         }
+
     }
 }
