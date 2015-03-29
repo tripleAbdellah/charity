@@ -11,7 +11,7 @@ namespace DonorApp.Repositories
     public interface IDonorsRepository
     {
         //   throws NoDonorsFoundException
-    	IEnumerable<Donor> GetAllDonors();
+    //	IEnumerable<Donor> GetAllDonors();
         //   throws NoDonorsFoundException
         IEnumerable<Donor> GetDonors(SearchDonorRequest searchRequest);
         //   throws DonorNotFoundException
