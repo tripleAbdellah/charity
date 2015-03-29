@@ -24,8 +24,9 @@ namespace DonorApp.Controllers
         	{
         		if (searchRequest == null) 
         		{
-                    IEnumerable<Donor> donors = repository.GetAllDonors();
-                    return Request.CreateResponse<IEnumerable<Donor>>(HttpStatusCode.OK, donors);
+                    //IEnumerable<Donor> donors = repository.GetAllDonors();
+                    //return Request.CreateResponse<IEnumerable<Donor>>(HttpStatusCode.OK, donors);
+                             throw new HttpResponseException(HttpStatusCode.BadRequest);
         		}
                 else
                 {
