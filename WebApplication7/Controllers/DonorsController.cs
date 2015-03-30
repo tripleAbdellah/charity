@@ -26,7 +26,7 @@ namespace DonorApp.Controllers
         		{
                     //IEnumerable<Donor> donors = repository.GetAllDonors();
                     //return Request.CreateResponse<IEnumerable<Donor>>(HttpStatusCode.OK, donors);
-                             throw new HttpResponseException(HttpStatusCode.BadRequest);
+                             return Request.CreateResponse(HttpStatusCode.BadRequest);
         		}
                 else
                 {
