@@ -1,0 +1,27 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace DonorApp.Models
+{
+    public class ShoppingAllocation : PricedAllocation
+    {
+        public string Category { get; set; }
+        public string SubCategory { get; set; }
+
+        public ShoppingAllocation(string Category, string SubCategory, float UnitPrice)
+            : base("Shopping", UnitPrice)
+        {
+            this.Category = Category;
+            this.SubCategory = SubCategory;
+        }
+
+        public ShoppingAllocation(string Category, string SubCategory, float UnitPrice, int Units)
+            : base("Shopping", UnitPrice, Units)
+        {
+            this.Category = Category;
+            this.SubCategory = SubCategory;
+        }
+    }
+}
