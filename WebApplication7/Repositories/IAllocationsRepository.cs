@@ -11,6 +11,9 @@ namespace DonorApp.Repositories
     {
         //   throws NoAllocationsFoundException
         IEnumerable<Allocation> GetAllAllocations();
+        
+        //added by AAA: to get the list of orphans, donorCode is required  
+        IEnumerable<Allocation> GetAllAllocations(int DonorCode);
 
     }
 }
